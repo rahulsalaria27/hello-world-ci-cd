@@ -28,13 +28,13 @@ jobs:
       - name: Install Fastlane
         run: |
           gem install fastlane -NV --user-install
-          GEM_BIN="$HOME/.gem/ruby/$(ruby -e 'puts RUBY_VERSION[/\d+\.\d+/]')/bin"
-          echo "$GEM_BIN" >> $GITHUB_PATH
+          GEM_BIN=$(ruby -e 'require "rubygems"; puts File.join(Gem.user_dir, "bin")')
           echo "Fastlane installed in: $GEM_BIN"
+          echo "$GEM_BIN" >> $GITHUB_PATH  
 
       - name: Verify Fastlane Installation
         run: |
-          GEM_BIN="$HOME/.gem/ruby/$(ruby -e 'puts RUBY_VERSION[/\d+\.\d+/]')/bin"
+          GEM_BIN=$(ruby -e 'require "rubygems"; puts File.join(Gem.user_dir, "bin")')
           echo "Checking directory: $GEM_BIN"
           ls -la "$GEM_BIN"
           echo "PATH: $PATH"
