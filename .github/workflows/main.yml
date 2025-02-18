@@ -1,0 +1,67 @@
+name: Flutter CI/CD demo
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.27.2"
+          cache: true
+
+      - name: Install Dependencies
+        run: flutter pub get
+        
+      - name: Run Linter
+        run: flutter analyze
+
+      - name: Run Tests
+        run: flutter test
+
+      - name: Build Release APK
+        run: flutter build apk --release
+         
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Build AppBundle
+        run: flutter build appbundle --release
+
+      - name: Upload AppBundle Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Deploy to Firebase
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: cd android && fastlane deploy_firebase
+
+      - name: Deploy to Play Store (Optional)
+        env:
+          JSON_KEY_FILE: ${{ secrets.GOOGLE_PLAY_JSON }}
+        run: cd android && fastlane deploy_playstore
