@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - develop
-      
   pull_request:
     branches:
       - main
@@ -31,13 +30,22 @@ jobs:
           GEM_BIN=$(ruby -e 'require "rubygems"; puts File.join(Gem.user_dir, "bin")')
           echo "$GEM_BIN" >> $GITHUB_PATH
           echo "Fastlane installed in: $GEM_BIN"
-          
 
-      - name: Verify Fastlane Installation (Using Explicit GEM Variables)
+      - name: Verify Fastlane Installation
         run: |
           export GEM_HOME=$HOME/.gem
           export GEM_PATH=$HOME/.gem
-          fastlane --version    
+          fastlane --version
+
+      - name: Cache Flutter Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: flutter-pub-linux-stable-${{ runner.os }}-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            flutter-pub-linux-stable-${{ runner.os }}-
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -47,7 +55,7 @@ jobs:
 
       - name: Install Dependencies
         run: flutter pub get
-        
+
       - name: Run Linter
         run: flutter analyze
 
@@ -56,7 +64,7 @@ jobs:
 
       - name: Build Release APK
         run: flutter build apk --release
-         
+
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -72,24 +80,10 @@ jobs:
           name: release-aab
           path: build/app/outputs/bundle/release/app-release.aab
 
-      - name: Install Fastlane
-        run: gem install fastlane
-
       - name: Deploy to Firebase
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: cd android && fastlane deploy_firebase
-
-      - name: Cache Flutter Dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-            .dart_tool
-          key: flutter-pub-linux-stable-${{ runner.os }}-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
-            flutter-pub-linux-stable-${{ runner.os }}-
-
 
 #      - name: Deploy to Play Store (Optional)
 #        env:
