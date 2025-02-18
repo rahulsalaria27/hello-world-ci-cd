@@ -31,6 +31,7 @@ jobs:
           GEM_BIN=$(ruby -e 'require "rubygems"; puts File.join(Gem.user_dir, "bin")')
           echo "$GEM_BIN" >> $GITHUB_PATH
           echo "Fastlane installed in: $GEM_BIN"
+          
 
       - name: Verify Fastlane Installation (Using Explicit GEM Variables)
         run: |
