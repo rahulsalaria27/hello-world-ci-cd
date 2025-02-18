@@ -29,16 +29,14 @@ jobs:
         run: |
           gem install fastlane -NV --user-install
           GEM_BIN=$(ruby -e 'require "rubygems"; puts File.join(Gem.user_dir, "bin")')
+          echo "$GEM_BIN" >> $GITHUB_PATH
           echo "Fastlane installed in: $GEM_BIN"
-          echo "$GEM_BIN" >> $GITHUB_PATH  
 
-      - name: Verify Fastlane Installation
+      - name: Verify Fastlane Installation (Using Explicit GEM Variables)
         run: |
-          GEM_BIN=$(ruby -e 'require "rubygems"; puts File.join(Gem.user_dir, "bin")')
-          echo "Checking directory: $GEM_BIN"
-          ls -la "$GEM_BIN"
-          echo "PATH: $PATH"
-          fastlane --version
+          export GEM_HOME=$HOME/.gem
+          export GEM_PATH=$HOME/.gem
+          fastlane --version    
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
