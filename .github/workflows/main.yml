@@ -61,12 +61,12 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: cd android && fastlane deploy_firebase
 
-      - name: Deploy to Play Store (Optional)
-        env:
-          JSON_KEY_FILE: ${{ secrets.GOOGLE_PLAY_JSON }}
-        run: cd android && fastlane deploy_playstore
-
-      - name: Deploy to TestFlight
-        env:
-          APP_STORE_API_KEY: ${{ secrets.APP_STORE_API_KEY }}
-        run: cd ios && fastlane deploy_testflight
+#      - name: Deploy to Play Store (Optional)
+#        env:
+#          JSON_KEY_FILE: ${{ secrets.GOOGLE_PLAY_JSON }}
+#        run: cd android && fastlane deploy_playstore
+#
+#      - name: Deploy to TestFlight
+#        env:
+#          APP_STORE_API_KEY: ${{ secrets.APP_STORE_API_KEY }}
+#        run: cd ios && fastlane deploy_testflight
