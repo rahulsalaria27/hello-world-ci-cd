@@ -20,6 +20,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Set up GEM Environment
+        run: |
+          echo "GEM_HOME=$HOME/.gem" >> $GITHUB_ENV
+          echo "GEM_PATH=$HOME/.gem" >> $GITHUB_ENV
+
+      - name: Install Fastlane
+        run: |
+          gem install fastlane -NV --user-install
+          echo "${HOME}/.gem/ruby/3.2.0/bin" >> $GITHUB_PATH
+
+      - name: Verify Fastlane Installation
+        run: fastlane --version
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -60,6 +73,17 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: cd android && fastlane deploy_firebase
+
+      - name: Cache Flutter Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: flutter-pub-linux-stable-${{ runner.os }}-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            flutter-pub-linux-stable-${{ runner.os }}-
+
 
 #      - name: Deploy to Play Store (Optional)
 #        env:
