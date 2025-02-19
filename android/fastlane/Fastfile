@@ -49,11 +49,10 @@ platform :android do
       app: "1:338649658254:android:8d53bc921b1dede24ceadf",
       testers: "ritik@megamindcreations.com, rahulsalaria@megamindcreations.com",
       firebase_cli_token: ENV["FIREBASE_TOKEN"],
-      release_notes: "New release from Fastlane CI/CD"
+      release_notes: "New release from Fastlane CI/CD",  # Comma added here
       apk_path: "build/app/outputs/flutter-apk/app-release.apk"
     )
   end
-
 
   desc "Build & Upload to Google Play"
   lane :deploy_playstore do
@@ -67,3 +66,4 @@ platform :android do
     )
   end
 end
+
