@@ -19,33 +19,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up GEM Environment
-        run: |
-          echo "GEM_HOME=$HOME/.gem" >> $GITHUB_ENV
-          echo "GEM_PATH=$HOME/.gem" >> $GITHUB_ENV
-
-      - name: Install Fastlane
-        run: |
-          gem install fastlane -NV --user-install
-          GEM_BIN=$(ruby -e 'require "rubygems"; puts File.join(Gem.user_dir, "bin")')
-          echo "$GEM_BIN" >> $GITHUB_PATH
-          echo "Fastlane installed in: $GEM_BIN"
-
-      - name: Verify Fastlane Installation
-        run: |
-          export GEM_HOME=$HOME/.gem
-          export GEM_PATH=$HOME/.gem
-          fastlane --version
-
-      - name: Cache Flutter Dependencies
-        uses: actions/cache@v4
+      - name: Setup JDK
+        uses: actions/setup-java@v3
         with:
-          path: |
-            ~/.pub-cache
-            .dart_tool
-          key: flutter-pub-linux-stable-${{ runner.os }}-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
-            flutter-pub-linux-stable-${{ runner.os }}-
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -62,28 +40,43 @@ jobs:
       - name: Run Tests
         run: flutter test
 
-      - name: Build Release APK
+      - name: Build APK (Release)
         run: flutter build apk --release
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Setup Bundler & Fastlane
+        run: |
+          cd android
+          gem install bundler
+          bundle init
+          bundle install
 
-      - name: Build AppBundle
-        run: flutter build appbundle --release
-
-      - name: Upload AppBundle Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-aab
-          path: build/app/outputs/bundle/release/app-release.aab
-
-      - name: Deploy to Firebase
+      - name: Deploy to Firebase (Android)
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: cd android && fastlane deploy_firebase
+        run: cd android && bundle exec fastlane deploy_firebase
+
+#      - name: Build Release APK
+#        run: flutter build apk --release
+#
+#      - name: Upload APK Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: release-apk
+#          path: build/app/outputs/flutter-apk/app-release.apk
+#
+#      - name: Build AppBundle
+#        run: flutter build appbundle --release
+#
+#      - name: Upload AppBundle Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: release-aab
+#          path: build/app/outputs/bundle/release/app-release.aab
+#
+#      - name: Deploy to Firebase
+#        env:
+#          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+#        run: cd android && fastlane deploy_firebase
 
 #      - name: Deploy to Play Store (Optional)
 #        env:

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "338649658254",
+    "project_id": "hello-world-cicd-252bc",
+    "storage_bucket": "hello-world-cicd-252bc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338649658254:android:8d53bc921b1dede24ceadf",
+        "android_client_info": {
+          "package_name": "com.cicdDemo.cicd_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGh-nE0igEMj1fI_7LowozS7o5wQd4ofk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
