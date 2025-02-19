@@ -56,6 +56,12 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
+      # Install missing gems explicitly
+      - name: Install Fastlane dependencies
+        run: |
+          cd android
+          bundle install --path vendor/bundle    
+
       - name: Deploy to Firebase (Android)
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
