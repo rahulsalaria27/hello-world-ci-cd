@@ -43,6 +43,7 @@ jobs:
       - name: Build APK (Release)
         run: flutter build apk --release
 
+
       - name: Setup Bundler & Fastlane
         run: |
           cd android
