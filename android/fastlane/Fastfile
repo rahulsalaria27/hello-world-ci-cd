@@ -50,7 +50,7 @@ platform :android do
       testers: "ritik@megamindcreations.com, rahulsalaria@megamindcreations.com",
       firebase_cli_token: ENV["FIREBASE_TOKEN"],
       release_notes: "New release from Fastlane CI/CD",  # Comma added here
-      apk_path: "build/app/outputs/flutter-apk/app-release.apk"
+      apk_path: "../build/app/outputs/flutter-apk/app-release.apk"
     )
   end
 
