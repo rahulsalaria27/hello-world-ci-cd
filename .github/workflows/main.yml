@@ -43,54 +43,20 @@ jobs:
       - name: Build APK (Release)
         run: flutter build apk --release
 
-      - name: Setup Bundler & Fastlane
-        run: |
-          cd android
-          gem install bundler --user-install
-          bundle init
-          bundle install --path vendor/bundle
-
 #      - name: Setup Bundler & Fastlane
 #        run: |
 #          cd android
-#          gem install bundler
+#          gem install bundler --user-install
 #          bundle init
-#          bundle install
+#          bundle install --path vendor/bundle
+
+      - name: Setup Ruby and Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
 
       - name: Deploy to Firebase (Android)
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: cd android && bundle exec fastlane deploy_firebase
-
-#      - name: Build Release APK
-#        run: flutter build apk --release
-#
-#      - name: Upload APK Artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: release-apk
-#          path: build/app/outputs/flutter-apk/app-release.apk
-#
-#      - name: Build AppBundle
-#        run: flutter build appbundle --release
-#
-#      - name: Upload AppBundle Artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: release-aab
-#          path: build/app/outputs/bundle/release/app-release.aab
-#
-#      - name: Deploy to Firebase
-#        env:
-#          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-#        run: cd android && fastlane deploy_firebase
-
-#      - name: Deploy to Play Store (Optional)
-#        env:
-#          JSON_KEY_FILE: ${{ secrets.GOOGLE_PLAY_JSON }}
-#        run: cd android && fastlane deploy_playstore
-#
-#      - name: Deploy to TestFlight
-#        env:
-#          APP_STORE_API_KEY: ${{ secrets.APP_STORE_API_KEY }}
-#        run: cd ios && fastlane deploy_testflight
